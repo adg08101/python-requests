@@ -1,7 +1,7 @@
 import json
 from fileinput import filename
 
-import requests
+import requests, sys
 
 """
 # Search GitHub's repositories for requests
@@ -35,7 +35,7 @@ r = requests.post(url, data=json.dumps(payload), headers=headers)
 
 print(r.json()['message'])
 """
-def jason():
+"""def jason():
     v = [{
         'id': '100',
         'name': 'MVP 2021',
@@ -52,13 +52,11 @@ def jason():
         'rating': 'AE'
     }]
     for i in v:
-        return i
+        return i"""
 
 # v = json.loads(json.dumps(v))
 
-url = 'http://localhost:8080/app/videogames/'
-
-response = requests.post(url= url, json= jason())
+"""response = requests.post(url= url, json= jason())
 print(response.text)
 
 response = requests.get(url,
@@ -88,11 +86,28 @@ response = requests.get(url + str(gid),
 print(response.json())
 
 response = requests.delete(url= url + str(gid))
-print(response.text)
+print(response.text)"""
 
-response = requests.get(url)
+def main(start, end):
+    url_start = 'http://127.0.0.1:8000/11/'
+    url_end = '/bla-bla-bla/results'
+    # response = requests.get(url)
+    i = int(start)
+    while i <= int(end):
+        url = url_start + str(i) + url_end
+        try:
+            response = requests.get(url)
+            print('GET', url, 'response:', response)
+        except requests.exceptions.ConnectionError:
+            response = 'Connection error'
+            print('GET', url, 'response:', response)
+        # print('GET', url, 'response:', response)
+        i += 1
 
-print(jason())
+    # print(start, end)
+    # print(response)
+
+"""print(jason())"""
 
 """url = 'http://httpbin.org/post'
 files = {'file': open('response.txt', 'rb')}
@@ -104,3 +119,7 @@ print(r.cookies)"""
 """response =  requests.get('http://www.github.com', allow_redirects= False, timeout= 1 * 2 / 3)
 print(response.url)
 print(response.history)"""
+
+if __name__ == '__main__':
+    args = sys.argv
+    main(args[1], args[2])
