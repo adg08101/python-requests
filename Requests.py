@@ -1,4 +1,6 @@
+import asyncio
 import json
+from asyncio import wait
 from fileinput import filename
 
 import requests, sys
@@ -88,24 +90,62 @@ print(response.json())
 response = requests.delete(url= url + str(gid))
 print(response.text)"""
 
-def main(start, end):
-    url_start = 'http://127.0.0.1:8000/11/'
+
+async def main():
+    for i in range(100):
+        response = requests.get(
+            'https://www.tuenvio.cu/lahabana/Products?depPid=46095',
+            # params=[('q', ['user:adg08101'])],
+            headers={'Accept': 'application/json, text/plain, */*',
+                     'Referer': '',
+                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'},
+        )
+        print(i, response, response.__sizeof__())
+        # await asyncio.sleep(3)
+
+
+""" url_start = 'http://127.0.0.1:8000/11/'
     url_end = '/bla-bla-bla/results'
     # response = requests.get(url)
     i = int(start)
+    success = 0
+    success_list= []
+    fail = 0
+    fail_list = []
     while i <= int(end):
         url = url_start + str(i) + url_end
         try:
             response = requests.get(url)
-            print('GET', url, 'response:', response)
+            print('GET', url, 'response:', response, "SUCCESS" if response.status_code == 200 else "FAIL")
+            if response.status_code == 200:
+                success += True
+                success_list.append(i)
+            else:
+                fail += True
+                fail_list.append(i)
         except requests.exceptions.ConnectionError:
             response = 'Connection error'
             print('GET', url, 'response:', response)
         # print('GET', url, 'response:', response)
         i += 1
 
-    # print(start, end)
-    # print(response)
+    print("SUCCEDED:", success, "FAILS:", fail)
+
+    menu(success, success_list, fail, fail_list)
+
+
+def menu(s, sl, f, fl):
+    option = input("Show success = 1\nShow fails = 2\nExit = 3\nSelect Option [1 | 2 | 3]:")
+    if option == '1':
+        print("Secceded for:")
+        print(sl)
+        menu(s, sl, f, fl)
+    elif option == '2':
+        print("Failed for:")
+        print(fl)
+        menu(s, sl, f, fl)
+    else:
+        print("Bye")"""
 
 """print(jason())"""
 
@@ -121,5 +161,6 @@ print(response.url)
 print(response.history)"""
 
 if __name__ == '__main__':
-    args = sys.argv
-    main(args[1], args[2])
+    asyncio.run(main())
+    """args = sys.argv
+    main(args[1], args[2])"""
